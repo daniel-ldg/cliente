@@ -1,6 +1,6 @@
 package cliente.datos;
 
-public class HttpException extends Exception {
+public class HttpException extends ApiException {
 
     public HttpException() {
     }

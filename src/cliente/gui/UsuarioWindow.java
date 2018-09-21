@@ -20,17 +20,30 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.LayoutStyle;
 import javax.swing.WindowConstants;
-import javax.swing.table.DefaultTableModel;
 
-public class UsuarioWindow extends javax.swing.JFrame {
+public class UsuarioWindow extends javax.swing.JDialog {
 
     private ApiUsuario apiUsuario;
+    private boolean startAppAgain;
     
     public UsuarioWindow() {
+        super((java.awt.Frame) null, true);
         initComponents();
         this.apiUsuario = new ApiUsuario(this.server.getText());
-        //cargarUsuarios();
         this.getContentPane().requestFocusInWindow();
+        this.startAppAgain = false;
+    }
+    
+    public UsuarioWindow(String serverUrl) {
+        this();
+        this.apiUsuario = new ApiUsuario(serverUrl);
+        this.server.setText(serverUrl);
+        this.server.setEnabled(false);
+        cargarUsuarios();
+    }
+
+    public boolean isStartAppAgain() {
+        return startAppAgain;
     }
     
     private void cargarUsuarios() {
@@ -74,8 +87,9 @@ public class UsuarioWindow extends javax.swing.JFrame {
         addNew = new JButton();
         refresh = new JButton();
         jLabel2 = new JLabel();
+        jButton1 = new JButton();
 
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
         jLabel1.setText("Servidor:");
         jLabel1.setToolTipText("");
@@ -102,6 +116,13 @@ public class UsuarioWindow extends javax.swing.JFrame {
 
         jLabel2.setText("Usuarios:");
 
+        jButton1.setText("Cerrar sesión");
+        jButton1.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
         GroupLayout layout = new GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
@@ -114,7 +135,8 @@ public class UsuarioWindow extends javax.swing.JFrame {
                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(server))
                     .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jButton1)
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(refresh)
                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(addNew))
@@ -136,7 +158,8 @@ public class UsuarioWindow extends javax.swing.JFrame {
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                     .addComponent(addNew)
-                    .addComponent(refresh))
+                    .addComponent(refresh)
+                    .addComponent(jButton1))
                 .addContainerGap())
         );
 
@@ -162,9 +185,16 @@ public class UsuarioWindow extends javax.swing.JFrame {
         cargarUsuarios();
     }//GEN-LAST:event_addNewActionPerformed
 
+    private void jButton1ActionPerformed(ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        this.startAppAgain = true;
+        dispose();
+    }//GEN-LAST:event_jButton1ActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private JButton addNew;
+    private JButton jButton1;
     private JLabel jLabel2;
     private JButton refresh;
     private JTextField server;

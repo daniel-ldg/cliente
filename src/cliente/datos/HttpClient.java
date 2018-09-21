@@ -23,7 +23,6 @@ public class HttpClient {
         conn.setRequestProperty("Accept", "application/json");
 
         if (conn.getResponseCode() != HttpURLConnection.HTTP_OK) {
-            System.out.println(conn.getResponseCode());
             throw new HttpException(Integer.toString(conn.getResponseCode()));
         }
 

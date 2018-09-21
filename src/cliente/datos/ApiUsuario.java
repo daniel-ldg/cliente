@@ -52,7 +52,7 @@ public class ApiUsuario {
             
             return usuarios;
             
-        } catch (IOException | HttpException ex) {
+        } catch (IOException ex) {
             throw new ApiException(ex);
         }
     }
@@ -65,7 +65,26 @@ public class ApiUsuario {
             
             return this.mapper.readValue(responseJson, Usuario.class);
             
-        } catch (IOException | HttpException ex) {
+        } catch (IOException ex) {
+            throw new ApiException(ex);
+        }
+    }
+    
+    public Usuario tryLogin(Usuario usuario) throws ApiException {
+        try {
+            String json = this.mapper.writeValueAsString(usuario);
+            
+            String responseJson = HttpClient.postRequestJson(this.serverUrl + "api/login", json);
+            
+            return this.mapper.readValue(responseJson, Usuario.class);
+            
+        } catch (HttpException ex) {
+            if (ex.getMessage().equals("404")) {
+                throw new AuthException(ex);
+            } else {
+                throw ex;
+            }
+        } catch (IOException ex) {
             throw new ApiException(ex);
         }
     }
